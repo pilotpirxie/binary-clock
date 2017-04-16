@@ -12,8 +12,13 @@ https://herbaciarz.github.io/binary-clock/demo.html
 * Create new instance of object.
 * Run it.
 
+### Setup
 ```js
 function(){
+    /**
+    * BinaryClock constructor accepts two parameteres.
+    * First was id of div to append, second is font size.
+    ***/
     const clock = new BinaryClock('binary-clock',32);
     clock.start(1000);
 })();
