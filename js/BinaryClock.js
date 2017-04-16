@@ -59,7 +59,7 @@ class BinaryClock {
         ));
         document.getElementsByTagName('head')[0].appendChild(style);
     }
-    
+
     /**
      * Add leading zeros to numbers
      *
