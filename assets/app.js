@@ -1,89 +1,109 @@
+/**
+ * @file Binary Clock.
+ * @author Herbaciarz
+ * @license MIT
+ */
+
 class BinaryClock {
-    constructor (id = 'binary-clock'){
+    /**
+     * @constructor
+     * @param {string} id - Id for widget append
+     * @param {number} size - Size of font
+     */
+    constructor(id = 'binary-clock', size = 32) {
         this.clockObj = document.getElementById(id);
-
-        this.clockObj.innerHTML = `
-            <div id="" style="display: inline; color: transparent;">O</div>
-            <div id="h10" style="display: inline;">O</div>
-            <div id="" style="display: inline; color: transparent;">O</div>
-            <div id="m10" style="display: inline;">O</div>
-            <div id="" style="display: inline; color: transparent;">O</div>
-            <div id="s10" style="display: inline;">O</div>
+        this.size = size;
+        this.clockObj.innerHTML =
+            `
+            <div class="binary-clock-el" id="h0-2">O</div>
+            <div class="binary-clock-el" id="h10">O</div>
+            <div class="binary-clock-el" id="m0-1">O</div>
+            <div class="binary-clock-el" id="m10">O</div>
+            <div class="binary-clock-el" id="s0-1">O</div>
+            <div class="binary-clock-el" id="s10">O</div>
             <br>
-            <div id="" style="display: inline; color: transparent;">O</div>
-            <div id="h11" style="display: inline;">O</div>
-            <div id="m00" style="display: inline;">O</div>
-            <div id="m11" style="display: inline;">O</div>
-            <div id="s00" style="display: inline;">O</div>
-            <div id="s11" style="display: inline;">O</div>
+            <div class="binary-clock-el" id="h0-1">O</div>
+            <div class="binary-clock-el" id="h11">O</div>
+            <div class="binary-clock-el" id="m00">O</div>
+            <div class="binary-clock-el" id="m11">O</div>
+            <div class="binary-clock-el" id="s00">O</div>
+            <div class="binary-clock-el" id="s11">O</div>
             <br>
-            <div id="h00" style="display: inline;">O</div>
-            <div id="h12" style="display: inline;">O</div>
-            <div id="m01" style="display: inline;">O</div>
-            <div id=m12" style="display: inline;">O</div>
-            <div id="s01" style="display: inline;">O</div>
-            <div id="s12" style="display: inline;">O</div>
+            <div class="binary-clock-el" id="h00">O</div>
+            <div class="binary-clock-el" id="h12">O</div>
+            <div class="binary-clock-el" id="m01">O</div>
+            <div class="binary-clock-el" id="m12">O</div>
+            <div class="binary-clock-el" id="s01">O</div>
+            <div class="binary-clock-el" id="s12">O</div>
             <br>
-            <div id="h01" style="display: inline;">O</div>
-            <div id="h13" style="display: inline;">O</div>
-            <div id="m02" style="display: inline;">O</div>
-            <div id="m13" style="display: inline;">O</div>
-            <div id="02" style="display: inline;">O</div>
-            <div id="s13" style="display: inline;">O</div>
-        `;
-
-        this.hoursEl1 = ['h00', 'h01'];
-        this.hoursEl2 = ['h10', 'h11', 'h12', 'h13'];
-
-        this.minutesEl1 = ['m00', 'm01', 'm02'];
-        this.minutesEl2 = ['m10', 'm11', 'm12', 'm13'];
-
-        this.secondsEl1 = ['s00', 's01', 's02'];
-        this.secondsEl2 = ['s10', 's11', 's12', 's13'];
-
+            <div class="binary-clock-el" id="h01">O</div>
+            <div class="binary-clock-el" id="h13">O</div>
+            <div class="binary-clock-el" id="m02">O</div>
+            <div class="binary-clock-el" id="m13">O</div>
+            <div class="binary-clock-el" id="s02">O</div>
+            <div class="binary-clock-el" id="s13">O</div>
+            `;
+        this.timEl = ['h0-2', 'h0-1', 'h00', 'h01', 'h10', 'h11', 'h12', 'h13'
+            , 'm0-1', 'm00', 'm01', 'm02', 'm10', 'm11', 'm12', 'm13', 's0-1'
+            , 's00', 's01', 's02', 's10', 's11', 's12', 's13'
+        ];
+        let style = document.createElement('style');
+        style.appendChild(document.createTextNode(
+            `
+            .binary-clock-el {
+                display: inline;
+                color: transparent;
+                font-size: `+this.size+`px;
+            }
+         `
+        ));
+        document.getElementsByTagName('head')[0].appendChild(style);
+    }
+    
+    /**
+     * Add leading zeros to numbers
+     *
+     * @param {number} number- Number to add zeros
+     * @param {number} width - Requested total length of number with leading zeros
+     * @return {string}
+     */
+    zeroFill(number, width) {
+        width -= number.toString().length;
+        if (width > 0) {
+            return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number;
+        }
+        return number + "";
     }
 
-    // zeroFill( number, width ) {
-    //     width -= number.toString().length;
-    //     if (width > 0) {
-    //         return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number;
-    //     }
-    //     return number + "";
-    // }
-
-    start(interval){
-
-        var date;
-
-        setInterval(function(){
-
-            date = new Date();
-
-            let hours2 = this.parseInt(parseInt(date.getHours().toString().slice('')[0]).toString(2));
-            if(date.getHours()>9){
-                var hours1 = parseInt(parseInt(date.getHours().toString().slice('')[1]).toString(2));
+    /**
+     * Get new time and update 'diodes'
+     */
+    refresh() {
+        const date = new Date();
+        let times = date.toTimeString().substr(0, 2).replace(':', '').replace(':', '');
+        let timem = date.toTimeString().substr(3, 2).replace(':', '').replace(':', '');
+        let timeh = date.toTimeString().substr(6, 2).replace(':', '').replace(':', '');
+        let time = (times + timem + timeh).split('');
+        var binaryTime = '';
+        for (let el of time) {
+            binaryTime += this.zeroFill(Number.parseInt(el).toString(2), 4);
+        }
+        for (let index in binaryTime.split('')) {
+            if (binaryTime[index] == 0) {
+                document.getElementById(this.timEl[index]).style.backgroundColor = 'black';
             } else {
-                var hours1 = 0;
+                document.getElementById(this.timEl[index]).style.backgroundColor = 'yellow';
             }
+        }
+    }
 
-            let minutes1 = parseInt(parseInt(date.getMinutes().toString().slice('')[0]).toString(2));
-            if(date.getMinutes()>9){
-                var minutes2 = parseInt(parseInt(date.getMinutes().toString().slice('')[1]).toString(2));
-            } else {
-                var minutes2 = 0;
-            }
-
-            let seconds2 = parseInt(parseInt(date.getSeconds().toString().slice('')[0]).toString(2));
-            if(date.getSeconds()>9){
-                var seconds1 = parseInt(parseInt(date.getSeconds().toString().slice('')[1]).toString(2));
-            } else {
-                var seconds1 = 0;
-            }
-
-
-
-            console.log(hours1, hours2, minutes1, minutes2, seconds1, seconds2);
+    /**
+     * Start interval
+     */
+    start(interval) {
+        var self = this;
+        setInterval(function() {
+            self.refresh();
         }, interval);
     }
-
 }

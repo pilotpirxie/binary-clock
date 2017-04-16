@@ -8,13 +8,11 @@
     <title>Binary Clock</title>
 </head>
 <body>
-    <div id="binary-clock" class="app">
-        asd
-    </div>
+    <div id="binary-clock" class="app"></div>
     <script src="assets/app.js"></script>
     <script>
         (function(){
-            const clock = new BinaryClock();
+            const clock = new BinaryClock('binary-clock',32);
             clock.start(1000);
         })();
     </script>
