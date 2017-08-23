@@ -1,6 +1,6 @@
 /**
  * @file Binary Clock.
- * @author Herbaciarz
+ * @author pilotpirxie
  * @license MIT
  */
 
