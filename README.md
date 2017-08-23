@@ -1,11 +1,6 @@
 # Binary Clock
 DOM manipulated binary clock widget.
 
-### Demo
-```
-https://herbaciarz.github.io/binary-clock/demo.html
-```
-
 ### How to use
 * Download ZIP file or clone repository.
 * Attach the script at the end of file.
